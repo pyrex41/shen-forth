@@ -1,0 +1,8 @@
+#!/bin/sh
+# shen-forth launcher stub. Does not boot kernel/klambda.
+set -e
+ROOT=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)
+cd "$ROOT"
+export SHEN_FORTH_ROOT="$ROOT"
+GFORTH=${GFORTH:-gforth}
+exec "$GFORTH" src/shen.fs -e "shen-launch" -- "$@"

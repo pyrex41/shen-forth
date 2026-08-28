@@ -1,0 +1,7 @@
+*~
+*.fi
+*.db
+.DS_Store
+result
+result-*
+/bin/shen-forth
