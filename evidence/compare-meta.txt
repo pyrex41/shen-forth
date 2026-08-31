@@ -1,0 +1,10 @@
+=== git ===
+bifrost 7d2f9bbcf745bfb90aa95a7e101fb59e9c4eccfa
+shen-go 54c0afd24ab37a6b7aca1c3e3d9f5132dea5bda9
+shen-go-shen42 b95bfeffe1c25708754ab11f7d944da3f7b84390
+shen-c e1c8073050fbe7a8843f46ca2207de48e2a91c41
+shen-forth 1eb3d11699c10f12828539585e480ac51583233f
+=== binaries ===
+-rwxr-xr-x@ 1 reuben  staff    222456 Aug 29 13:03 /Users/reuben/projects/shen-c/bin/shen-c
+-rwxr-xr-x@ 1 reuben  staff       355 Aug 29 13:14 /Users/reuben/projects/shen-forth/bin/shen
+-rwxr-xr-x@ 1 reuben  staff  22242418 Aug 11 15:44 /Users/reuben/projects/shen-go/.bin/shen-go

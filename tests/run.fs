@@ -5,4 +5,6 @@ s" harness.fs" included
 s" objects.fs" included
 s" heap.fs" included
 s" klambda.fs" included
+s" eval.fs" included
+s" boot.fs" included
 test-summary

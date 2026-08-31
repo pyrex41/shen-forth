@@ -1,8 +1,42 @@
 #!/bin/sh
-# shen-forth launcher stub. Does not boot kernel/klambda.
+# shen-forth launcher. Interpreter bootstrap of kernel/klambda; no AOT.
+# Do not cd: after boot, kernel `open` is process-cwd-relative (*home-directory* "").
 set -e
 ROOT=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)
-cd "$ROOT"
 export SHEN_FORTH_ROOT="$ROOT"
-GFORTH=${GFORTH:-gforth}
-exec "$GFORTH" src/shen.fs -e "shen-launch" -- "$@"
+
+# Resolve GNU Gforth: $GFORTH, PATH, flake `result`, then a Nix-store 0.7.3
+# build. nixpkgs gforth is marked broken on Darwin; the port flake builds 0.7.3.
+find_gforth() {
+  if [ -n "${GFORTH:-}" ] && [ -x "$GFORTH" ]; then
+    printf '%s\n' "$GFORTH"
+    return 0
+  fi
+  if [ -n "${GFORTH:-}" ] && command -v "$GFORTH" >/dev/null 2>&1; then
+    command -v "$GFORTH"
+    return 0
+  fi
+  if command -v gforth >/dev/null 2>&1; then
+    command -v gforth
+    return 0
+  fi
+  if [ -x "$ROOT/result/bin/gforth" ]; then
+    printf '%s\n' "$ROOT/result/bin/gforth"
+    return 0
+  fi
+  for cand in /nix/store/*-gforth-0.7.3/bin/gforth; do
+    if [ -x "$cand" ]; then
+      printf '%s\n' "$cand"
+      return 0
+    fi
+  done
+  return 1
+}
+
+GFORTH_BIN=$(find_gforth) || {
+  echo "$0: gforth not found (set \$GFORTH, put gforth on PATH, or nix develop in shen-forth)" >&2
+  exit 127
+}
+
+# Nested cons trees in declarations.kl need a deep Forth return stack.
+exec "$GFORTH_BIN" -r 8M -d 4M -l 1M -m 256M "$ROOT/src/shen.fs" -e "shen-launch" -- "$@"

@@ -27,19 +27,33 @@ variable intern-hash
   repeat
   2drop 0 ;
 
+: kl-sym-name ( obj -- str ) obj-payload @ ;
+: kl-sym-value ( obj -- x ) obj-payload 3 cells + @ ;
+: kl-sym-value! ( x obj -- )
+  tuck obj-payload 3 cells + !
+  dup obj-payload 5 cells + dup @ 1 or swap ! drop ;
+: kl-sym-bound? ( obj -- f ) obj-payload 5 cells + @ 1 and 0<> ;
+: kl-sym-fun ( obj -- x ) obj-payload 4 cells + @ ;
+: kl-sym-fun! ( x obj -- ) obj-payload 4 cells + ! ;
+
 : kl-intern ( c-addr u -- sym )
   2dup hash-str intern-hash !
   2dup intern-hash @ intern-lookup dup if nip nip exit then drop
   kl-string heap-root-push
-  3 cells ty-symbol heap-alloc
+  6 cells ty-symbol heap-alloc
   heap-root-pop over obj-payload !
   intern-hash @ over obj-payload cell+ !
   intern-hash @ intern-buckets mod intern-table @ swap cells +
   dup @ 2 pick obj-payload 2 cells + !
-  2dup ! drop ;
+  2dup ! drop
+  0 over obj-payload 3 cells + !
+  0 over obj-payload 4 cells + !
+  0 over obj-payload 5 cells + ! ;
 
 :noname ( -- )
   kl-nil heap-mark
+  kl-true heap-mark
+  kl-false heap-mark
   intern-table @ 0= if exit then
   intern-buckets 0 do
     intern-table @ i cells + @

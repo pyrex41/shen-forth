@@ -7,9 +7,9 @@
 2 cells constant obj-all
 3 cells constant obj-free
 
-64 1024 * constant arena-default
-256 constant root-max
-1024 constant heap-default-cap
+256 1024 * constant arena-default
+16384 constant root-max
+100000 constant heap-default-cap
 
 variable heap-arenas
 variable heap-arena
@@ -21,6 +21,7 @@ variable heap-gc-enabled
 variable heap-roots
 variable heap-root-n
 variable alloc-tmp
+variable scan-addr
 
 defer obj-mark-payload
 :noname drop ; is obj-mark-payload
@@ -28,9 +29,14 @@ defer obj-mark-payload
 defer intern-mark
 :noname ; is intern-mark
 
+defer extra-mark
+:noname ; is extra-mark
+
 : obj-payload ( obj -- addr ) /obj-header + ;
 
-: obj-type ( obj -- n ) obj-flags + @ ty-mask and ;
+: obj-type ( obj -- n )
+  dup 0= if drop -1 exit then
+  obj-flags + @ ty-mask and ;
 
 : obj-mark? ( obj -- f ) obj-flags + @ mark-bit and 0<> ;
 
@@ -97,6 +103,10 @@ variable arena-tmp
   -1 heap-root-n +!
   heap-roots @ heap-root-n @ cells + @ ;
 
+: heap-root-peek ( -- obj )
+  heap-root-n @ 0= abort" heap root underflow"
+  heap-roots @ heap-root-n @ 1- cells + @ ;
+
 : heap-mark ( obj -- )
   dup 0= if drop exit then
   dup obj-free? if drop exit then
@@ -128,10 +138,43 @@ variable arena-tmp
     obj-all + @
   repeat drop ;
 
+: in-heap-range? ( addr -- f )
+  scan-addr !
+  heap-arenas @
+  begin dup while
+    dup dup arena-data swap arena-bump + @ +
+    scan-addr @ -rot within
+    if drop -1 exit then
+    arena-next + @
+  repeat drop 0 ;
+
+: obj-looks-valid? ( addr -- f )
+  dup 0= if drop 0 exit then
+  dup aligned over <> if drop 0 exit then
+  dup in-heap-range? 0= if drop 0 exit then
+  dup obj-free? if drop 0 exit then
+  obj-flags + @ obj-magic and obj-magic = ;
+
+: maybe-mark ( addr -- )
+  dup obj-looks-valid? if heap-mark else drop then ;
+
+: scan-cells ( lo hi -- )
+  2dup u< 0= if 2drop exit then
+  swap ?do i @ maybe-mark cell +loop ;
+
+: scan-range ( a b -- )
+  2dup u< if scan-cells else swap scan-cells then ;
+
+: heap-mark-stacks ( -- )
+  sp@ sp0 scan-range
+  rp@ rp0 scan-range ;
+
 : heap-collect ( -- )
   intern-mark
+  extra-mark
   heap-mark-roots
-  heap-sweep ;
+  heap-sweep
+  heap-n-live @ 2* heap-cap @ max heap-cap ! ;
 
 : heap-maybe-gc ( -- )
   heap-gc-enabled @ 0= if exit then
@@ -173,5 +216,6 @@ variable arena-tmp
   then
   alloc-tmp !
   alloc-tmp @ swap obj-set-type drop
+  alloc-tmp @ obj-flags + dup @ obj-magic or swap !
   1 heap-n-live +!
   alloc-tmp @ ;

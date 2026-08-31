@@ -1,0 +1,305 @@
+compare vs shen-go (S41.2 reference, not shen-go-shen42)
+date_utc: 2026-08-29T19:16:51Z
+host: Darwin arm64
+bifrost_cwd: /Users/reuben/projects/bifrost
+command: python3 bifrost.py --impls <one>  (light corpus, 31 cases)
+Bifrost does not record wall time; outer python perf_counter wall is recorded.
+SHEN_C_HOME unset: True
+gforth: /nix/store/01cnlgiyrlgalxlkxk141kswh71l0swr-gforth-0.7.3/bin/gforth
+
+========================================================================
+BIFROST LIGHT shen-go
+argv: python3 bifrost.py --impls shen-go
+wall_seconds: 5.879
+exit: 0
+--- stdout ---
+
+==============================================================================
+BIFROST MATRIX  (impl x case)
+==============================================================================
+case                     shen-go   verdict
+------------------------------------------
+int-mul                  PASS      PASS
+int-div-exact            PASS      PASS
+int-div-to-float         PASS      PASS
+float-add-clean          PASS      PASS
+float-add-imprecise      PASS      PASS
+subtraction              PASS      PASS
+comparison               PASS      PASS
+eval-prints-value        PASS      PASS
+version-expr-41-2        PASS      PASS
+version-banner-contains  PASS      PASS
+stdin-eof-clean-exit     PASS      PASS
+closure-simple           PASS      PASS
+closure-curried          PASS      PASS
+fix-point                PASS      PASS
+recursion-fib-file       PASS      PASS
+tail-call-countdown      PASS      PASS
+hush-file-write          PASS      PASS
+load-toplevel-echo       PASS      PASS
+trap-error-catches       PASS      PASS
+trap-error-message       PASS      PASS
+error-message-head       PASS      PASS
+int-div-zero             PASS      PASS
+append                   PASS      PASS
+reverse                  PASS      PASS
+map-square               PASS      PASS
+length                   PASS      PASS
+string-concat            PASS      PASS
+tlstr                    PASS      PASS
+string-to-n              PASS      PASS
+n-to-string              PASS      PASS
+prolog-grandparent       PASS      PASS
+------------------------------------------
+
+SUMMARY: 31 pass, 0 diverge (known), 0 FAIL  across 1 impls
+==============================================================================
+--- stderr ---
+running int-mul                      ... PASS (0.1s)
+running int-div-exact                ... PASS (0.2s)
+running int-div-to-float             ... PASS (0.2s)
+running float-add-clean              ... PASS (0.2s)
+running float-add-imprecise          ... PASS (0.2s)
+running subtraction                  ... PASS (0.2s)
+running comparison                   ... PASS (0.2s)
+running eval-prints-value            ... PASS (0.2s)
+running version-expr-41-2            ... PASS (0.2s)
+running version-banner-contains      ... PASS (0.2s)
+running stdin-eof-clean-exit         ... PASS (0.2s)
+running closure-simple               ... PASS (0.2s)
+running closure-curried              ... PASS (0.2s)
+running fix-point                    ... PASS (0.2s)
+running recursion-fib-file           ... PASS (0.2s)
+running tail-call-countdown          ... PASS (0.2s)
+running hush-file-write              ... PASS (0.2s)
+running load-toplevel-echo           ... PASS (0.2s)
+running trap-error-catches           ... PASS (0.2s)
+running trap-error-message           ... PASS (0.2s)
+running error-message-head           ... PASS (0.2s)
+running int-div-zero                 ... PASS (0.2s)
+running append                       ... PASS (0.2s)
+running reverse                      ... PASS (0.2s)
+running map-square                   ... PASS (0.2s)
+running length                       ... PASS (0.2s)
+running string-concat                ... PASS (0.2s)
+running tlstr                        ... PASS (0.2s)
+running string-to-n                  ... PASS (0.2s)
+running n-to-string                  ... PASS (0.2s)
+running prolog-grandparent           ... PASS (0.2s)
+
+========================================================================
+BIFROST LIGHT shen-c
+argv: python3 bifrost.py --impls shen-c
+wall_seconds: 3.569
+exit: 1
+--- stdout ---
+
+==============================================================================
+BIFROST MATRIX  (impl x case)
+==============================================================================
+case                     shen-c    verdict
+------------------------------------------
+int-mul                  PASS      PASS
+int-div-exact            PASS      PASS
+int-div-to-float         PASS      PASS
+float-add-clean          PASS      PASS
+float-add-imprecise      PASS      PASS
+subtraction              PASS      PASS
+comparison               PASS      PASS
+eval-prints-value        PASS      PASS
+version-expr-41-2        FAIL      FAIL
+version-banner-contains  FAIL      FAIL
+stdin-eof-clean-exit     PASS      PASS
+closure-simple           PASS      PASS
+closure-curried          PASS      PASS
+fix-point                PASS      PASS
+recursion-fib-file       PASS      PASS
+tail-call-countdown      PASS      PASS
+hush-file-write          PASS      PASS
+load-toplevel-echo       PASS      PASS
+trap-error-catches       PASS      PASS
+trap-error-message       FAIL      FAIL
+error-message-head       PASS      PASS
+int-div-zero             PASS      PASS
+append                   PASS      PASS
+reverse                  PASS      PASS
+map-square               PASS      PASS
+length                   PASS      PASS
+string-concat            FAIL      FAIL
+tlstr                    FAIL      FAIL
+string-to-n              PASS      PASS
+n-to-string              FAIL      FAIL
+prolog-grandparent       PASS      PASS
+------------------------------------------
+
+FAILURES:
+  ! version-expr-41-2: golden='41.2'; mismatches: shen-c='"42"'
+  ! version-banner-contains: version must contain '41.2'
+  ! trap-error-message: golden='boom'; mismatches: shen-c='"boom"'
+  ! string-concat: golden='foobar'; mismatches: shen-c='"foobar"'
+  ! tlstr: golden='ello'; mismatches: shen-c='"ello"'
+  ! n-to-string: golden='A'; mismatches: shen-c='"A"'
+
+SUMMARY: 25 pass, 0 diverge (known), 6 FAIL  across 1 impls
+==============================================================================
+--- stderr ---
+running int-mul                      ... PASS (0.1s)
+running int-div-exact                ... PASS (0.1s)
+running int-div-to-float             ... PASS (0.1s)
+running float-add-clean              ... PASS (0.1s)
+running float-add-imprecise          ... PASS (0.1s)
+running subtraction                  ... PASS (0.1s)
+running comparison                   ... PASS (0.1s)
+running eval-prints-value            ... PASS (0.1s)
+running version-expr-41-2            ... FAIL (0.1s)
+running version-banner-contains      ... FAIL (0.0s)
+running stdin-eof-clean-exit         ... PASS (0.1s)
+running closure-simple               ... PASS (0.1s)
+running closure-curried              ... PASS (0.1s)
+running fix-point                    ... PASS (0.1s)
+running recursion-fib-file           ... PASS (0.1s)
+running tail-call-countdown          ... PASS (0.2s)
+running hush-file-write              ... PASS (0.1s)
+running load-toplevel-echo           ... PASS (0.1s)
+running trap-error-catches           ... PASS (0.1s)
+running trap-error-message           ... FAIL (0.1s)
+running error-message-head           ... PASS (0.1s)
+running int-div-zero                 ... PASS (0.1s)
+running append                       ... PASS (0.1s)
+running reverse                      ... PASS (0.1s)
+running map-square                   ... PASS (0.1s)
+running length                       ... PASS (0.1s)
+running string-concat                ... FAIL (0.1s)
+running tlstr                        ... FAIL (0.1s)
+running string-to-n                  ... PASS (0.1s)
+running n-to-string                  ... FAIL (0.1s)
+running prolog-grandparent           ... PASS (0.1s)
+
+========================================================================
+BIFROST LIGHT shen-forth
+argv: python3 bifrost.py --impls shen-forth
+wall_seconds: 57.063
+exit: 1
+--- stdout ---
+
+==============================================================================
+BIFROST MATRIX  (impl x case)
+==============================================================================
+case                     shen-forth verdict
+-------------------------------------------
+int-mul                  PASS       PASS
+int-div-exact            PASS       PASS
+int-div-to-float         PASS       PASS
+float-add-clean          PASS       PASS
+float-add-imprecise      PASS       PASS
+subtraction              PASS       PASS
+comparison               PASS       PASS
+eval-prints-value        PASS       PASS
+version-expr-41-2        FAIL       FAIL
+version-banner-contains  FAIL       FAIL
+stdin-eof-clean-exit     PASS       PASS
+closure-simple           PASS       PASS
+closure-curried          PASS       PASS
+fix-point                PASS       PASS
+recursion-fib-file       PASS       PASS
+tail-call-countdown      PASS       PASS
+hush-file-write          PASS       PASS
+load-toplevel-echo       PASS       PASS
+trap-error-catches       PASS       PASS
+trap-error-message       FAIL       FAIL
+error-message-head       PASS       PASS
+int-div-zero             PASS       PASS
+append                   PASS       PASS
+reverse                  PASS       PASS
+map-square               PASS       PASS
+length                   PASS       PASS
+string-concat            FAIL       FAIL
+tlstr                    FAIL       FAIL
+string-to-n              PASS       PASS
+n-to-string              FAIL       FAIL
+prolog-grandparent       PASS       PASS
+-------------------------------------------
+
+FAILURES:
+  ! version-expr-41-2: golden='41.2'; mismatches: shen-forth='"42"'
+  ! version-banner-contains: version must contain '41.2'
+  ! trap-error-message: golden='boom'; mismatches: shen-forth='"boom"'
+  ! string-concat: golden='foobar'; mismatches: shen-forth='"foobar"'
+  ! tlstr: golden='ello'; mismatches: shen-forth='"ello"'
+  ! n-to-string: golden='A'; mismatches: shen-forth='"A"'
+
+SUMMARY: 25 pass, 0 diverge (known), 6 FAIL  across 1 impls
+==============================================================================
+--- stderr ---
+running int-mul                      ... PASS (1.8s)
+running int-div-exact                ... PASS (1.8s)
+running int-div-to-float             ... PASS (1.9s)
+running float-add-clean              ... PASS (1.9s)
+running float-add-imprecise          ... PASS (2.0s)
+running subtraction                  ... PASS (1.9s)
+running comparison                   ... PASS (1.9s)
+running eval-prints-value            ... PASS (1.8s)
+running version-expr-41-2            ... FAIL (1.8s)
+running version-banner-contains      ... FAIL (0.0s)
+running stdin-eof-clean-exit         ... PASS (1.9s)
+running closure-simple               ... PASS (1.9s)
+running closure-curried              ... PASS (2.0s)
+running fix-point                    ... PASS (1.9s)
+running recursion-fib-file           ... PASS (2.3s)
+running tail-call-countdown          ... PASS (2.6s)
+running hush-file-write              ... PASS (1.9s)
+running load-toplevel-echo           ... PASS (1.9s)
+running trap-error-catches           ... PASS (1.8s)
+running trap-error-message           ... FAIL (1.7s)
+running error-message-head           ... PASS (1.7s)
+running int-div-zero                 ... PASS (1.8s)
+running append                       ... PASS (1.9s)
+running reverse                      ... PASS (1.9s)
+running map-square                   ... PASS (2.0s)
+running length                       ... PASS (1.8s)
+running string-concat                ... FAIL (1.7s)
+running tlstr                        ... FAIL (1.8s)
+running string-to-n                  ... PASS (1.7s)
+running n-to-string                  ... FAIL (1.8s)
+running prolog-grandparent           ... PASS (2.2s)
+
+========================================================================
+PER-IMPL WALL SUMMARY
+shen-go: exit=0 wall=5.879s
+shen-c: exit=1 wall=3.569s
+shen-forth: exit=1 wall=57.063s
+
+========================================================================
+COMBINED python3 bifrost.py --impls shen-go,shen-c,shen-forth
+cwd=/Users/reuben/projects/bifrost
+PATH includes nix gforth-0.7.3; SHEN_C_HOME unset
+/usr/bin/time -p: real 63.22 user 62.66 sys 1.24
+COMBINED_EXIT:1
+SUMMARY: 21 pass, 0 diverge (known), 10 FAIL  across 3 impls
+FAILURES:
+  float-add-imprecise: '0.30000000000000004' <- shen-go; '0.3' <- shen-c,shen-forth
+  version-expr-41-2: golden='41.2'; mismatches: shen-c='"42"', shen-forth='"42"'
+  version-banner-contains: version must contain '41.2'
+  hush-file-write: written <- shen-go; empty <- shen-c,shen-forth
+  load-toplevel-echo: '"PROBE"\n42\nloaded' <- shen-go,shen-c; 'error: open: cannot open' <- shen-forth
+  trap-error-message: golden='boom'; mismatches: shen-c='"boom"', shen-forth='"boom"'
+  error-message-head: 'head expects a non-empty list' <- shen-go; quoted+newline <- shen-c,shen-forth
+  string-concat: golden='foobar'; mismatches quoted on c/forth
+  tlstr: golden='ello'; mismatches quoted on c/forth
+  n-to-string: golden='A'; mismatches quoted on c/forth
+NOTE: solo runs (golden vs one impl) differ from combined (agreement across impls).
+Solo shen-go: 31/31 PASS wall 5.879s exit 0
+Solo shen-c: 25 pass / 6 FAIL wall 3.569s exit 1
+Solo shen-forth: 25 pass / 6 FAIL wall 57.063s exit 1
+Bifrost does not record wall time; walls are outer /usr/bin/time or perf_counter.
+status stays experimental; not production.
+
+========================================================================
+TABLE (live; not production)
+impl            bifrost          bifrost_s  canonical         canonical_s
+shen-go S41.2   pass 31/31       5.879      pass 134/0        5.97
+shen-c S42 exp  fail 25/31       3.569      fail 129/5        85.22
+shen-forth S42  fail 25/31       57.063     pass 134/0        595.22
+combined --impls shen-go,shen-c,shen-forth  fail 21/31  wall 63.22s exit 1
+evals: (version) (+ 1 1) countdown20 all rc=0; go 41.2 / c+forth "42"
+canonical logs: compare-runme-shen-{go,c,forth}.log

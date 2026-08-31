@@ -1,0 +1,16 @@
+evals date_utc: 2026-08-29T19:27:13Z
+== shen-go ==
+--version rc=0 wall=0.186s stdout='41.2 (port ("Go" "1.0.0-rc1") implementation ("AOT+interpreter" "go1.26.4"))'
+(version) rc=0 wall=0.144s stdout='41.2'
+(+ 1 1) rc=0 wall=0.145s stdout='2'
+countdown20 rc=0 wall=0.150s stdout='done'
+== shen-c ==
+--version rc=0 wall=0.005s stdout='Shen-C 0.2.3'
+(version) rc=0 wall=0.093s stdout='"42"'
+(+ 1 1) rc=0 wall=0.090s stdout='2'
+countdown20 rc=0 wall=0.100s stdout='done'
+== shen-forth ==
+--version rc=0 wall=0.017s stdout='shen-forth 0.1.0-s42'
+(version) rc=0 wall=1.528s stdout='"42"'
+(+ 1 1) rc=0 wall=1.699s stdout='2'
+countdown20 rc=0 wall=1.756s stdout='done'

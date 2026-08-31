@@ -1,0 +1,30 @@
+# shen-forth corpus / Bifrost — how to run (live)
+# cwd for make/eval/certify: /Users/reuben/projects/shen-forth
+# cwd for Bifrost:           /Users/reuben/projects/bifrost
+# launcher: ./bin/shen (exports SHEN_FORTH_ROOT; does not chdir)
+# needs: gforth on PATH (Nix 0.7.3 from this flake)
+# interpreter only, port-owned mark/sweep (not collected after kernel boot), no AOT, no C.
+
+nix develop -c make
+# Forth harness passed 113 failed 0 + launcher eval (cwd-relative load,
+# unquoted CLI strings, eval -q -l hush file write)
+
+nix develop -c ./bin/shen --version
+# stdout: shen-forth 0.1.0-s42
+
+nix develop -c ./bin/shen eval -e '(version)'
+# stdout: 42
+
+nix develop -c ./bin/shen eval -e '(+ 40 2)'
+# stdout: 42
+
+nix develop -c make certify
+# or: nix develop -c ./bin/shen eval -e '(do (cd "kernel/tests") (load "runme.shen"))'
+# canonical S42 suite: kernel/tests/runme.shen -> harness.shen + kerneltests.shen
+# live 2026-08-29 (this run): passed ... 134  failed ... 0  runme load 939.49s  make EXIT:0
+# log: evidence/certify.log
+
+# Bifrost adapters.json shen-forth is argv lists (eval -e / script FILE / --version / REPL).
+# eval also accepts -q/--quiet and -l/--load. Do not set SHEN_C_HOME.
+cd /Users/reuben/projects/bifrost
+PATH="/nix/store/01cnlgiyrlgalxlkxk141kswh71l0swr-gforth-0.7.3/bin:$PATH" python3 bifrost.py --impls shen-forth

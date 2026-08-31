@@ -17,5 +17,5 @@ The `extension-*.kl` files are Shen port extensions and remain outside the
 canonical inventory. This tree vendors only the 15 files above plus this
 provenance note. `backend.kl` is kept for audit completeness.
 
-shen-forth does **not** boot these files at the foundation stage. Interpreter
-bootstrap of KLambda is a later stage. There is no KLambda-to-Forth AOT.
+shen-forth loads these files (except `backend.kl`) in `install.lsp` order
+via the interpreter. There is no KLambda-to-Forth AOT.

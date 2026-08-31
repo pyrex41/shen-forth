@@ -17,6 +17,9 @@ s" kernel/klambda/writer.kl" file-exists s" writer.kl" assert-true
 s" kernel/klambda/yacc.kl" file-exists s" yacc.kl" assert-true
 s" kernel/klambda/PROVENANCE.md" file-exists s" PROVENANCE.md" assert-true
 s" kernel/klambda/extension-features.kl" file-exists 0= s" no extension kl" assert-true
+s" kernel/tests/runme.shen" file-exists s" runme.shen" assert-true
+s" kernel/tests/harness.shen" file-exists s" harness.shen" assert-true
+s" kernel/tests/kerneltests.shen" file-exists s" kerneltests.shen" assert-true
 
-\ Loading KLambda as Forth must not have happened.
-s" shen.klambda-booted" forth-wordlist search-wordlist 0= s" kernel not booted" assert-true
+\ Kernel files are vendored; interpreter boot is lazy until eval/repl.
+kl-booted @ 0= s" kernel lazy until eval" assert-true

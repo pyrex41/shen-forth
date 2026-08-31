@@ -1,0 +1,44 @@
+shen-forth corpus / Bifrost evidence
+date_utc: 2026-08-29T18:47:25Z
+host: Darwin arm64
+shen-forth_head: 1eb3d11699c10f12828539585e480ac51583233f
+bifrost_head: 7d2f9bbcf745bfb90aa95a7e101fb59e9c4eccfa
+gforth: /nix/store/01cnlgiyrlgalxlkxk141kswh71l0swr-gforth-0.7.3/bin/gforth
+kernel: S42 pyrex41/shen-upstream@s42-pristine-20260825
+archive_sha256: 30abdc7e5a1e27b7a20109c1ed141e4712885e31f24d9710d16415fbbd4dfb23
+note: interpreter only; port-owned mark/sweep in src/heap.fs; no AOT; no C.
+note: intern-specials intern both lambda and /.; kl-load-buffer evaluates every kernel form including declarations.kl (shen.build-lambda-table (external shen)) and types.kl declare.
+note: post-boot GC collection is disabled (VALUE/local roots); collector code remains.
+note: bin/shen cds to the tree and sets SHEN_FORTH_ROOT; Bifrost must not require SHEN_C_HOME.
+
+=== nix develop -c make ===
+passed 112 failed 0
+launcher eval greps ok (version 42, (+ 1 2), declare, cartprod load)
+
+=== nix develop -c ./bin/shen --version ===
+shen-forth 0.1.0-s42
+
+=== nix develop -c ./bin/shen eval -e '(version)' ===
+"42"
+
+=== nix develop -c ./bin/shen eval -e '(+ 40 2)' ===
+42
+
+=== printf "" | ./bin/shen (stdin EOF) ===
+credits + prompt; REPL_EXIT:0
+
+=== make corpus / load runme.shen ===
+command: ./bin/shen eval -e '(do (cd "kernel/tests") (load "runme.shen"))'
+log: evidence/corpus.log
+passed ... 134
+failed ... 0
+pass rate ... 100%
+real 740.20
+user 724.55
+sys 11.24
+EXIT:0
+groups not skipped.
+
+=== PATH=gforth python3 bifrost.py --impls shen-forth --only eval-prints-value ===
+eval-prints-value  PASS  (1.9s)  golden='42'
+SUMMARY: 1 pass, 0 diverge (known), 0 FAIL  across 1 impls
