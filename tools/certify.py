@@ -63,7 +63,7 @@ def main():
     with log_path.open("wb") as log:
         while True:
             if time.monotonic() - start > args.timeout: reason = "timeout"; kill_group(proc); break
-            peak = max(rss_tree(proc.pid) or [0])
+            peak = sum(rss_tree(proc.pid))
             if peak > args.rss_mib * 1024: reason = f"rss-limit ({peak} KiB > {args.rss_mib} MiB)"; kill_group(proc); break
             for key, _ in sel.select(0.2):
                 chunk = os.read(key.fd, 65536)

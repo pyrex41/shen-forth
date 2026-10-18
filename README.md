@@ -21,7 +21,9 @@ requires 40 reports ending in 154 passed and 0 failed, plus 154 individual
 passed lines. The certifier bounds execution at 240 seconds, 1536 MiB RSS,
 and 4 MiB output; a limit produces UNKNOWN and a retained log/JSON receipt.
 The current clean canonical run reached the 1536 MiB RSS bound after 15.583
-seconds, so it is UNKNOWN rather than a qualification PASS. Mark/sweep is implemented but not
+seconds, so it is UNKNOWN rather than a qualification PASS. The retained
+[portable receipt](evidence/certification/canonical-43.1-rss-unknown.json)
+records that bounded run. Mark/sweep is implemented but not
 collected after kernel boot (Gforth VALUE/local roots). `bin/shen`
 does not chdir; `*hush*` gates stdout only.
 

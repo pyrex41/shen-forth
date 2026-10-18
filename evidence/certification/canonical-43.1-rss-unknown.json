@@ -1,0 +1,14 @@
+{
+  "status": "UNKNOWN",
+  "reason": "rss-limit",
+  "suite": "ShenOSKernel 43.1 kernel/tests/runme.shen",
+  "reports": 0,
+  "passed_lines": 0,
+  "failed_lines": 0,
+  "exit_code": -9,
+  "duration_s": 15.583,
+  "rss_limit_mib": 1536,
+  "output_bytes": 0,
+  "log": "evidence/certification/canonical-43.1-rss-unknown.log",
+  "portable_note": "Root bounded canonical run reached the RSS limit before producing a harness report."
+}
