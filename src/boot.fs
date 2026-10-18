@@ -100,14 +100,12 @@ variable boot-form
   s" writer.kl" boot-module
   s" macros.kl" boot-module
   s" declarations.kl" boot-module
-  \ The tree-walker does not execute declarations' final top-level PUT when
-  \ loading a file containing the generated declaration table. Establish the
-  \ package marker explicitly; symbol rewriting remains kernel-owned.
-  s" (put shen shen.external-symbols () (value *property-vector*))" kl-read-string kl-nil kl-eval drop
-  s" (put shen shen.internal-symbols () (value *property-vector*))" kl-read-string kl-nil kl-eval drop
   s" types.kl" boot-module
   s" t-star.kl" boot-module
   s" init.kl" boot-module
+  initialise-kernel
+  \ Rebuild the runtime table once after all core files have loaded; the
+  \ initial pass occurs before the generated declaration arities exist.
   initialise-kernel
   \ init.kl recreates *property-vector*. Re-establish the package marker
   \ against that final dictionary (the CL ports do this during image build).

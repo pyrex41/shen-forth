@@ -369,7 +369,8 @@ variable pos-u
   ['] prim-char-out 1 s" shen.char-stoutput?" defprim
   ['] prim-char-in 1 s" shen.char-stinput?" defprim
   ['] prim-thaw 1 s" thaw" defprim
-  ['] prim-fn 1 s" fn" defprim
+  \ S43.1 kernel owns fn: it resolves shen.lambda-form from the runtime
+  \ dictionary. Do not replace it with the legacy symbol-function lookup.
   ['] prim-apply 2 s" apply" defprim
   ['] prim-exit 1 s" exit" defprim
   ['] prim-integer? 1 s" integer?" defprim
