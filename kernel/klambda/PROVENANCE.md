@@ -1,21 +1,17 @@
 # Kernel provenance
 
-## Shen 42.0 (S42), Mark Tarver
+## ShenOSKernel 43.1
 
-The 15 canonical `.kl` files are byte-identical copies of Mark Tarver's S42
-archive (`KLambda/`), vendored from `shen-rust/kernel/klambda` at the S42 pin.
+The vendored kernel sources are byte-identical files from the community
+ShenOSKernel 43.1 release archive.
 
-Canonical source: `pyrex41/shen-upstream`, tag `s42-pristine-20260825`.
-Original archive: https://www.shenlanguage.org/Download/S42.zip
-Archive SHA-256: `30abdc7e5a1e27b7a20109c1ed141e4712885e31f24d9710d16415fbbd4dfb23`
+Canonical source: https://github.com/Shen-Language/shen-sources/releases/tag/shen-43.1
+Archive: `ShenOSKernel-43.1.tar.gz`
+Archive SHA-256: `900eedef44f440af78f9395ed06e689ce1604546fc309f5bc7c8bc84cc651920`
+Kernel commit: `715824a52b55e9c81a9501df8548ff3edd8411f5`
 
-Canonical files: `backend.kl`, `core.kl`, `declarations.kl`, `load.kl`,
-`macros.kl`, `prolog.kl`, `reader.kl`, `sequent.kl`, `sys.kl`, `t-star.kl`,
-`toplevel.kl`, `track.kl`, `types.kl`, `writer.kl`, and `yacc.kl`.
-
-The `extension-*.kl` files are Shen port extensions and remain outside the
-canonical inventory. This tree vendors only the 15 files above plus this
-provenance note. `backend.kl` is kept for audit completeness.
-
-shen-forth loads these files (except `backend.kl`) in `install.lsp` order
-via the interpreter. There is no KLambda-to-Forth AOT.
+The 43.1 core load includes `toplevel`, `core`, `sys`, `dict`, `sequent`,
+`yacc`, `reader`, `prolog`, `track`, `load`, `writer`, `macros`,
+`declarations`, `types`, `t-star`, and `init`. Extension and stlib files are
+vendored for audit and remain outside the bounded Forth qualification scope.
+There is no KLambda-to-Forth AOT.

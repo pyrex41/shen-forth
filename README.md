@@ -1,9 +1,9 @@
 # shen-forth
 
-Gforth-first port of [Shen](https://shenlanguage.org) (S42). Tagged heap
+Gforth-first port of [Shen](https://shenlanguage.org) (43.1). Tagged heap
 objects, intern, a port-owned non-moving mark/sweep collector, a `.kl`
 reader, KLambda primitives (including `trap-error`), and **interpreter
-bootstrap** of the 15 canonical kernel files in `install.lsp` order.
+bootstrap** of the 16 canonical kernel files in Shen/CL `boot.lsp` order.
 There is no KLambda-to-Forth AOT.
 
 Shen programs compile to KLambda. This port implements the primitive set
@@ -12,17 +12,17 @@ and hosts those files on the ALLOCATE heap.
 ## Status
 
 Interpreter bootstrap. Experimental. `bin/shen eval -e "(version)"`
-prints `42` after loading the 14 boot modules (`backend.kl` is
+prints `43.1` after loading the 16 boot modules (`backend.kl` is
 vendored, not booted). Every kernel form is evaluated, including
 load-time `(declare ...)` and `(shen.build-lambda-table ...)`. `make
-corpus` / `make certify` runs S42 `kernel/tests/runme.shen`
+corpus` / `make certify` runs the 43.1 `kernel/tests/runme.shen`
 (`harness.shen` + `kerneltests.shen`) with no groups skipped. Do not
 claim 134/0 without a live report. Mark/sweep is implemented but not
 collected after kernel boot (Gforth VALUE/local roots). `bin/shen`
 does not chdir; `*hush*` gates stdout only.
 
-Pinned kernel: `pyrex41/shen-upstream@s42-pristine-20260825`, archive
-SHA-256 `30abdc7e5a1e27b7a20109c1ed141e4712885e31f24d9710d16415fbbd4dfb23`.
+Pinned kernel: ShenOSKernel 43.1 commit `715824a52b55e9c81a9501df8548ff3edd8411f5`, archive
+SHA-256 `900eedef44f440af78f9395ed06e689ce1604546fc309f5bc7c8bc84cc651920`.
 See [`kernel/klambda/PROVENANCE.md`](kernel/klambda/PROVENANCE.md).
 
 ## How to run
@@ -31,8 +31,8 @@ See [`kernel/klambda/PROVENANCE.md`](kernel/klambda/PROVENANCE.md).
 nix develop -c make
 ```
 
-That is the supported command. It runs the Forth harness, checks the 15
-canonical `.kl` files (and that `extension-*.kl` are absent), checks
+That is the supported command. It runs the bounded Forth harness and checks the 16
+canonical `.kl` files, checks
 `kernel/tests/runme.shen` is present, and runs `bin/shen eval` (which
 boots the kernel). Full certification is `nix develop -c make certify`.
 
@@ -61,8 +61,8 @@ broken on Darwin) and `gnumake`.
 | `bin/shen` | launcher: `eval` / `script` / `repl` / `--version` |
 | `src/` | tagged objects, intern, mark/sweep, reader, eval, primitives |
 | `tests/` | Gforth harness (not `runme.shen`) |
-| `kernel/klambda/` | 15 canonical S42 `.kl` files |
-| `kernel/tests/` | S42 `runme.shen` / `harness.shen` / `kerneltests.shen` |
+| `kernel/klambda/` | 43.1 canonical `.kl` files |
+| `kernel/tests/` | 43.1 `runme.shen` / `harness.shen` / `kerneltests.shen` |
 | `flake.nix` | Nix dev shell |
 
 REPL and kernel objects live on the **ALLOCATE** heap, not Forth dictionary

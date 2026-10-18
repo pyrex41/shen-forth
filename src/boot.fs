@@ -1,4 +1,4 @@
-\ Incremental S42 kernel bootstrap. install.lsp order. No AOT.
+\ Incremental ShenOSKernel 43.1 bootstrap. Port order follows Shen/CL boot.lsp.
 
 variable kl-booted
 create boot-path 1024 allot
@@ -63,6 +63,17 @@ variable boot-form
   then
   slurp-file kl-load-buffer ;
 
+: initialise-kernel ( -- )
+  \ init.kl defines the environment builder; ports must invoke it after
+  \ loading the complete 43.1 core and after registering host globals.
+  s" (shen.initialise)" kl-read-string kl-nil kl-eval drop ;
+
+: seed-property-vector ( -- )
+  \ declarations.kl contains a top-level external-symbols PUT.  Shen/CL
+  \ has this global from its host port before loading declarations; create
+  \ the same pre-init boundary once dict.kl has supplied shen.dict.
+  s" (set *property-vector* (shen.dict 20000))" kl-read-string kl-nil kl-eval drop ;
+
 \ *hush* gates stdout only — not stderr, not file streams.
 \ Do not use shen.char-stoutput? (true for st-out and st-err).
 : override-pr-hush ( -- )
@@ -75,21 +86,31 @@ variable boot-form
 : kl-boot-kernel ( -- )
   0 heap-gc-enabled !
   2000000 heap-cap !
-  s" sys.kl" boot-module
-  override-hot
-  s" writer.kl" boot-module
-  s" core.kl" boot-module
-  s" reader.kl" boot-module
-  s" declarations.kl" boot-module
   s" toplevel.kl" boot-module
-  s" macros.kl" boot-module
-  s" load.kl" boot-module
-  s" prolog.kl" boot-module
+  s" core.kl" boot-module
+  s" sys.kl" boot-module
+  s" dict.kl" boot-module
+  seed-property-vector
   s" sequent.kl" boot-module
-  s" track.kl" boot-module
-  s" t-star.kl" boot-module
   s" yacc.kl" boot-module
+  s" reader.kl" boot-module
+  s" prolog.kl" boot-module
+  s" track.kl" boot-module
+  s" load.kl" boot-module
+  s" writer.kl" boot-module
+  s" macros.kl" boot-module
+  s" declarations.kl" boot-module
   s" types.kl" boot-module
+  s" t-star.kl" boot-module
+  s" init.kl" boot-module
+  initialise-kernel
+\ Extensions and stlib are loaded only after the core is bootable.
+\ The current Forth port does not yet implement their required host hooks.
+\ Keep the bounded kernel scope explicit until those hooks are ported.
+\
+\ Legacy order retained below only as a reference for old evidence.
+\ s" sys.kl" boot-module
+  override-hot
   override-hot
   override-pr-hush
   heap-n-live @ 2* 2000000 max heap-cap !

@@ -124,7 +124,10 @@ variable pos-u
 
 : prim-value
   0 arg@ dup obj-type ty-symbol = 0= if drop s" value: not a symbol" kl-error then
-  dup kl-sym-bound? 0= if drop s" variable has no value" kl-error then
+  dup kl-sym-bound? 0= if
+    dup kl-symbol-name dup obj-type ty-string = if kl-string-bytes type cr else drop then
+    drop s" variable has no value" kl-error
+  then
   kl-sym-value ;
 
 : prim-absvector
@@ -231,6 +234,18 @@ variable pos-u
   1 arg@ dup obj-type ty-stream = 0= if drop s" write-string: not a stream" kl-error then
   kl-stream-handle write-file if s" write-string failed" kl-error then
   0 arg@ ;
+
+\ S43.1 public stream protocol. Gforth uses byte streams for the bounded
+\ port, so char-stream? is false and read-unit-string is retained as the
+\ required one-unit entry point for ports that select the character path.
+: prim-char-stream? drop kl-false ;
+
+: prim-read-unit-string
+  0 arg@ dup obj-type ty-stream = 0= if drop s" read-unit-string: not a stream" kl-error then
+  dup kl-stream-handle
+  io-buf 1 rot read-file if drop drop s" read-unit-string failed" kl-error then
+  0= if 2drop s" " kl-string exit then
+  2drop io-buf c@ kl-int kl>f f>d drop io-buf c! io-buf 1 kl-string ;
 
 : prim-char-out
   0 arg@ dup st-out = swap st-err = or kl-bool ;
@@ -342,6 +357,9 @@ variable pos-u
   ['] prim-read-byte 1 s" read-byte" defprim
   ['] prim-write-byte 2 s" write-byte" defprim
   ['] prim-write-string 2 s" shen.write-string" defprim
+  ['] prim-write-string 2 s" write-string" defprim
+  ['] prim-read-unit-string 1 s" read-unit-string" defprim
+  ['] prim-char-stream? 1 s" char-stream?" defprim
   ['] prim-char-out 1 s" shen.char-stoutput?" defprim
   ['] prim-char-in 1 s" shen.char-stinput?" defprim
   ['] prim-thaw 1 s" thaw" defprim
@@ -391,4 +409,7 @@ variable pos-u
   s" shen-forth" s" *port*" set-global-str
   s" Reuben Brooks" s" *porters*" set-global-str
   s" Unix" s" *os*" set-global-str
+  s" 43.1" s" *version*" set-global-str
+  s" 200" s" *maximum-print-sequence-size*" set-global-str
+  kl-nil s" *macros*" kl-intern kl-sym-value!
   kl-false s" *hush*" kl-intern kl-sym-value! ;
