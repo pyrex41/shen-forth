@@ -61,15 +61,20 @@ variable str-len
 
 : kl-vlen ( obj -- n ) obj-payload @ ;
 
+variable vset-val
+variable vset-vec
+variable vset-idx
+
 : kl-vref ( vec i -- obj )
   over kl-vlen over <= abort" vector bounds"
   dup 0< abort" vector bounds"
   cells swap obj-payload cell+ + @ ;
 
 : kl-vset ( val vec i -- )
-  over kl-vlen over <= abort" vector bounds"
-  dup 0< abort" vector bounds"
-  cells swap obj-payload cell+ + ! ;
+  vset-idx ! vset-vec ! vset-val !
+  vset-idx @ 0< abort" vector bounds"
+  vset-idx @ vset-vec @ kl-vlen >= abort" vector bounds"
+  vset-val @ vset-vec @ obj-payload cell+ vset-idx @ cells + ! ;
 
 : kl-symbol-name ( obj -- str ) obj-payload @ ;
 
