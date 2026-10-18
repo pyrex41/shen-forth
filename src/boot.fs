@@ -104,13 +104,6 @@ variable boot-form
   s" t-star.kl" boot-module
   s" init.kl" boot-module
   initialise-kernel
-  \ Rebuild the runtime table once after all core files have loaded; the
-  \ initial pass occurs before the generated declaration arities exist.
-  initialise-kernel
-  \ init.kl recreates *property-vector*. Re-establish the package marker
-  \ against that final dictionary (the CL ports do this during image build).
-  s" (put shen shen.external-symbols () (value *property-vector*))" kl-read-string kl-nil kl-eval drop
-  s" (put shen shen.internal-symbols () (value *property-vector*))" kl-read-string kl-nil kl-eval drop
 \ Extensions and stlib are loaded only after the core is bootable.
 \ The current Forth port does not yet implement their required host hooks.
 \ Keep the bounded kernel scope explicit until those hooks are ported.
@@ -118,9 +111,7 @@ variable boot-form
 \ Legacy order retained below only as a reference for old evidence.
 \ s" sys.kl" boot-module
   override-hot
-  override-hot
   override-pr-hush
-  s" (put shen shen.external-symbols () (value *property-vector*))" kl-read-string kl-nil kl-eval drop
   heap-n-live @ 2* 2000000 max heap-cap !
   \ After the kernel exists, a full collect is not safe yet: Gforth VALUE
   \ cells and locals are not in the conservative sp/rp scan, and reusing
