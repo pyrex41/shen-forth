@@ -1,0 +1,19 @@
+cd <worktree> && gforth -r 8M -d 4M -l 1M -m 256M src/shen.fs tests/run.fs
+passed 109 failed 0 
+cd <worktree> && ./bin/shen --version | grep -q shen-forth
+cd <worktree> && ./bin/shen --help >/dev/null
+cd <worktree> && ./bin/shen eval -e "(+ 1 2)" | grep -q 3
+cd <worktree> && ./bin/shen eval -e "(version)" | grep -qx 43.1
+cd /tmp && <worktree>/bin/shen eval -e "(+ 1 2)" | grep -qx 3
+cd <worktree> && ./bin/shen eval -e '(@s "foo" "bar")' | grep -Fqx foobar
+cd <worktree> && ./bin/shen eval -e '(tlstr "hello")' | grep -Fqx ello
+cd <worktree> && ./bin/shen eval -e '(n->string 65)' | grep -Fqx A
+cd <worktree> && ./bin/shen eval -e '(trap-error (simple-error "boom") (/. E (error-to-string E)))' | grep -Fqx boom
+cd <worktree> && ./bin/shen eval -e "((/. X (+ X 1)) 4)" | grep -qx 5
+cd <worktree> && ./bin/shen eval -e '(trap-error (simple-error "boom") (/. E 99))' | grep -qx 99
+cd <worktree> && ./bin/shen eval -e "(cons 1 ())" | grep -Fqx '[1]'
+cd <worktree> && ./bin/shen eval -e "()" | grep -Fqx '[]'
+cd <worktree> && ./bin/shen eval -e "(map (+ 1) [1 2 3])" | grep -Fqx '[2 3 4]'
+cd <worktree> && ./bin/shen eval -e "(thaw (freeze 8))" | grep -qx 8
+cd <worktree> && ./bin/shen eval -e "(defun fact (N) (if (= N 0) 1 (* N (fact (- N 1)))))" | grep -q fact
+cd <worktree> && ./bin/shen eval -e "(declare foo [number --> number])" | grep -qx foo
