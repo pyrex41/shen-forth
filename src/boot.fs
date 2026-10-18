@@ -100,10 +100,19 @@ variable boot-form
   s" writer.kl" boot-module
   s" macros.kl" boot-module
   s" declarations.kl" boot-module
+  \ The tree-walker does not execute declarations' final top-level PUT when
+  \ loading a file containing the generated declaration table. Establish the
+  \ package marker explicitly; symbol rewriting remains kernel-owned.
+  s" (put shen shen.external-symbols () (value *property-vector*))" kl-read-string kl-nil kl-eval drop
+  s" (put shen shen.internal-symbols () (value *property-vector*))" kl-read-string kl-nil kl-eval drop
   s" types.kl" boot-module
   s" t-star.kl" boot-module
   s" init.kl" boot-module
   initialise-kernel
+  \ init.kl recreates *property-vector*. Re-establish the package marker
+  \ against that final dictionary (the CL ports do this during image build).
+  s" (put shen shen.external-symbols () (value *property-vector*))" kl-read-string kl-nil kl-eval drop
+  s" (put shen shen.internal-symbols () (value *property-vector*))" kl-read-string kl-nil kl-eval drop
 \ Extensions and stlib are loaded only after the core is bootable.
 \ The current Forth port does not yet implement their required host hooks.
 \ Keep the bounded kernel scope explicit until those hooks are ported.
@@ -113,6 +122,7 @@ variable boot-form
   override-hot
   override-hot
   override-pr-hush
+  s" (put shen shen.external-symbols () (value *property-vector*))" kl-read-string kl-nil kl-eval drop
   heap-n-live @ 2* 2000000 max heap-cap !
   \ After the kernel exists, a full collect is not safe yet: Gforth VALUE
   \ cells and locals are not in the conservative sp/rp scan, and reusing

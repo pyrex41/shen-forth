@@ -242,10 +242,16 @@ variable pos-u
 
 : prim-read-unit-string
   0 arg@ dup obj-type ty-stream = 0= if drop s" read-unit-string: not a stream" kl-error then
-  dup kl-stream-handle
-  io-buf 1 rot read-file if drop drop s" read-unit-string failed" kl-error then
-  0= if 2drop s" " kl-string exit then
-  2drop io-buf c@ kl-int kl>f f>d drop io-buf c! io-buf 1 kl-string ;
+  dup kl-stream-kind stream-std = 0= if drop s" read-unit-string: character streams unsupported" kl-error then
+  \ The bounded Forth port advertises byte streams only. Keep this guard
+  \ before the host read so an unsupported call is catchable without consuming
+  \ the next byte (including malformed UTF-8 or EOF sentinels).
+  drop s" read-unit-string: character streams unsupported" kl-error ;
+\ unreachable byte implementation retained for the future char-stream port
+\  dup kl-stream-handle
+\  io-buf 1 rot read-file if drop drop s" read-unit-string failed" kl-error then
+\  0= if 2drop s" " kl-string exit then
+\  2drop io-buf c@ kl-int kl>f f>d drop io-buf c! io-buf 1 kl-string ;
 
 : prim-char-out
   0 arg@ dup st-out = swap st-err = or kl-bool ;
