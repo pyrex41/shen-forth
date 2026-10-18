@@ -2,8 +2,10 @@
 
 ## ShenOSKernel 43.1
 
-The vendored kernel sources are byte-identical files from the community
-ShenOSKernel 43.1 release archive.
+The 23 vendored kernel sources are byte-identical files from the community
+ShenOSKernel 43.1 release archive. `backend.kl` remains a local Forth fixture
+and is outside that official archive set; `compiler.kl` is not vendored or
+booted.
 
 Canonical source: https://github.com/Shen-Language/shen-sources/releases/tag/shen-43.1
 Archive: `ShenOSKernel-43.1.tar.gz`
