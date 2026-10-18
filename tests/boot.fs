@@ -13,6 +13,15 @@ kl>f 3 s>d d>f f= s" boot still +" assert-true
 s" (value *version*)" kl-read-string kl-nil kl-eval
 kl-string-bytes s" 43.1" compare 0= s" *version* 43.1" assert-true
 
+s" (package? shen)" kl-read-string kl-nil kl-eval
+kl-true = s" shen package metadata" assert-true
+
+s" (fn append)" kl-read-string kl-nil kl-eval
+obj-type ty-closure = s" append lambda metadata" assert-true
+
+s" (let V (absvector 2) (do (address-> V 1 99) (<-address V 1)))" kl-read-string kl-nil kl-eval
+kl>f 99 s>d d>f f= s" vector store/read" assert-true
+
 s" (map (+ 1) [1 2 3])" kl-read-string kl-nil kl-eval
 dup obj-type ty-cons = s" map type" assert-true
 dup kl-car kl>f 2 s>d d>f f= s" map 2" assert-true

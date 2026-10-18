@@ -66,7 +66,13 @@ variable boot-form
 : initialise-kernel ( -- )
   \ init.kl defines the environment builder; ports must invoke it after
   \ loading the complete 43.1 core and after registering host globals.
-  s" (shen.initialise)" kl-read-string kl-nil kl-eval drop ;
+  \ Keep its three phases as separate top-level evaluations. Gforth's
+  \ tree-walker restores the caller frame after a deeply nested `do`; the
+  \ generated Shen initializer otherwise loses the property-vector state
+  \ before the lambda table is visible to subsequent calls.
+  s" (shen.initialise-environment)" kl-read-string kl-nil kl-eval drop
+  s" (shen.initialise-lambda-forms)" kl-read-string kl-nil kl-eval drop
+  s" (shen.initialise-signedfuncs)" kl-read-string kl-nil kl-eval drop ;
 
 : seed-property-vector ( -- )
   \ declarations.kl contains a top-level external-symbols PUT.  Shen/CL

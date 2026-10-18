@@ -385,7 +385,9 @@ variable pos-u
   ['] prim-element? 2 s" element?" defprim
   ['] prim-length 1 s" length" defprim
   ['] prim-empty? 1 s" empty?" defprim
-  ['] prim-hash 2 s" hash" defprim
+  \ Keep the kernel's Shen hash after boot. Dictionary buckets were built
+  \ with that hash; replacing it with the byte-oriented native hash makes
+  \ existing property-vector keys unreachable.
   ['] prim-y-or-n? 1 s" y-or-n?" defprim ;
 
 : pin-globals ( -- )
