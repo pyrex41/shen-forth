@@ -57,16 +57,13 @@ test-launcher:
 	cd $(ROOT) && ./bin/shen eval -e "(declare foo [number --> number])" | grep -qx foo
 
 
-# Canonical S42 suite (harness.shen + kerneltests.shen). Do not skip groups.
-# Not part of `make test` (~12 min on this interpreter).
+# Canonical Shen 43.1 suite (harness.shen + kerneltests.shen). Do not skip groups.
+# Bounded by tools/certify.py; UNKNOWN/FAIL returns nonzero and retains receipts.
 corpus:
 	cd $(ROOT) && ./bin/shen eval -e '(do (cd "kernel/tests") (load "runme.shen"))'
 
-# Tarver kernel/tests/runme.shen. Fail unless the live report is passed 134 / failed 0.
 certify:
-	cd $(ROOT) && ./bin/shen eval -e '(do (cd "kernel/tests") (load "runme.shen"))' | tee $(ROOT)/evidence/certify.log
-	@tail -n 30 $(ROOT)/evidence/certify.log | grep -F 'passed ... 134'
-	@tail -n 30 $(ROOT)/evidence/certify.log | grep -F 'failed ... 0'
+	cd $(ROOT) && python3 tools/certify.py
 
 version:
 	cd $(ROOT) && ./bin/shen --version

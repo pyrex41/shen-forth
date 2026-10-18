@@ -16,8 +16,12 @@ prints `43.1` after loading the 16 boot modules (`backend.kl` is
 vendored, not booted). Every kernel form is evaluated, including
 load-time `(declare ...)` and `(shen.build-lambda-table ...)`. `make
 corpus` / `make certify` runs the 43.1 `kernel/tests/runme.shen`
-(`harness.shen` + `kerneltests.shen`) with no groups skipped. Do not
-claim 134/0 without a live report. Mark/sweep is implemented but not
+(`harness.shen` + `kerneltests.shen`) with no groups skipped. Certification
+requires 40 reports ending in 154 passed and 0 failed, plus 154 individual
+passed lines. The certifier bounds execution at 240 seconds, 1536 MiB RSS,
+and 4 MiB output; a limit produces UNKNOWN and a retained log/JSON receipt.
+The current clean canonical run reached the 1536 MiB RSS bound after 15.583
+seconds, so it is UNKNOWN rather than a qualification PASS. Mark/sweep is implemented but not
 collected after kernel boot (Gforth VALUE/local roots). `bin/shen`
 does not chdir; `*hush*` gates stdout only.
 

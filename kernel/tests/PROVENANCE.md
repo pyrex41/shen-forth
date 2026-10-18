@@ -1,6 +1,6 @@
 # Kernel tests provenance
 
-Canonical S42 suite from Mark Tarver: `runme.shen` loads `harness.shen`
+Canonical Shen 43.1 suite from Mark Tarver: `runme.shen` loads `harness.shen`
 then `kerneltests.shen`.
 
 Source: `pyrex41/shen-upstream@s42-pristine-20260825` (`Test Programs/`),
@@ -9,5 +9,8 @@ archive SHA-256
 Vendored byte-identical with `shen-go-shen42/kernel/tests` at that pin
 (CRLF as in the S42 zip).
 
-This is the same finish line as other S42 ports. Do not skip groups to
-fake a green run.
+The 43.1 qualification target is 40 reports ending `passed ... 154` and
+`failed ... 0`, with 154 individual `passed` lines. `tools/certify.py` applies
+240 seconds, 1536 MiB RSS, and 4 MiB output bounds and retains a log and JSON
+receipt. A limit or incomplete receipt is UNKNOWN and exits nonzero; groups
+must not be skipped to fake a green run.

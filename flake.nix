@@ -53,7 +53,7 @@
         });
       devShells = each (pkgs: {
         default = pkgs.mkShell {
-          packages = [ (gforthPkg pkgs) pkgs.gnumake ];
+          packages = [ (gforthPkg pkgs) pkgs.gnumake pkgs.python3 ];
         };
       });
     };
