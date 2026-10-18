@@ -6,7 +6,9 @@ Candidate: `9781825b630aae56886e4f1be4a362e4d58dc6ca` on
 The port embeds the community ShenOSKernel 43.1 sources at commit
 `715824a52b55e9c81a9501df8548ff3edd8411f5` (archive SHA-256
 `900eedef44f440af78f9395ed06e689ce1604546fc309f5bc7c8bc84cc651920`). The
-vendored 24 `.kl` source files were preserved byte-for-byte during this fix.
+official 23 `.kl` source files were preserved byte-for-byte during this fix.
+The earlier 24-file count mistakenly included Shen/CL's separate compiler
+backend, subsequently removed because it is not in the release archive.
 
 ## Verified
 
