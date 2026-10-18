@@ -1,14 +1,21 @@
 {
   "status": "UNKNOWN",
-  "reason": "rss-limit",
-  "suite": "ShenOSKernel 43.1 kernel/tests/runme.shen",
-  "reports": 0,
-  "passed_lines": 0,
-  "failed_lines": 0,
-  "exit_code": -9,
-  "duration_s": 15.583,
-  "rss_limit_mib": 1536,
-  "output_bytes": 0,
+  "reason": "rss-limit (1601696 KiB > 1536 MiB)",
+  "command": [
+    "bin/shen",
+    "script",
+    "runme.shen"
+  ],
+  "cwd": "kernel/tests",
   "log": "evidence/certification/canonical-43.1-rss-unknown.log",
-  "portable_note": "Root bounded canonical run reached the RSS limit before producing a harness report."
+  "reports": [],
+  "passed_lines": 0,
+  "exit_code": -9,
+  "timeout_s": 240,
+  "rss_mib": 1536,
+  "output_mib": 4,
+  "duration_s": 13.24,
+  "source_commit": "db32ae25877f05057488ef005d32e0f9f346561e",
+  "runtime": "Gforth 0.7.3 / Darwin ARM64",
+  "date": "2026-10-18"
 }
